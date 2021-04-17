@@ -12,12 +12,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-@Configuration
 @Slf4j
+@Configuration
 public class LoadDatabase {
 
     @Bean
@@ -28,14 +26,16 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("Blog_7_1.txt");
 
-            String[] arrayQuestion = getArray(inputStreamGazQuestion);
+            String[] temp = getArray(inputStreamGazQuestion);
+
+            String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
 
             for (String s : arrayQuestion) {
 
-                List<String> list = new ArrayList<>(Arrays.asList(s.split("\\n")));
-
-                log.info("Preload gaz question " + gazRepo.save(new GazQuestions(list.get(0),
-                        list)));
+                String[] split = s.split("\\n");
+                int length = split.length;
+                log.info("Preload database " + gazRepo.save(new GazQuestions(split[0],
+                        Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
 
             }
 
@@ -57,6 +57,6 @@ public class LoadDatabase {
             }
         }
         return content.toString()
-                .split("\\n\\n");
+                .split("\\d+\\.\\s");
     }
 }
