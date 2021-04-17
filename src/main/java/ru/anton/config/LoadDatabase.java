@@ -12,6 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @Slf4j
@@ -28,8 +31,12 @@ public class LoadDatabase {
             String[] arrayQuestion = getArray(inputStreamGazQuestion);
 
             for (String s : arrayQuestion) {
-                String[] split = s.split("\\n");
-                log.info("Preload gaz question " + gazRepo.save(new GazQuestions(split[0])));
+
+                List<String> list = new ArrayList<>(Arrays.asList(s.split("\\n")));
+
+                log.info("Preload gaz question " + gazRepo.save(new GazQuestions(list.get(0),
+                        list)));
+
             }
 
         };
@@ -37,17 +44,19 @@ public class LoadDatabase {
 
     private String[] getArray(InputStream inputStream) throws IOException {
         StringBuilder content;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))){
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             content = new StringBuilder();
 
             String st;
 
-            while ((st = br.readLine()) != null){
-                if(st.contains("Билет"))
+            while ((st = br.readLine()) != null) {
+                if (st.contains("Билет"))
                     continue;
-                content.append(st).append("\n");
+                content.append(st)
+                        .append("\n");
             }
         }
-        return content.toString().split("\\n\\n");
+        return content.toString()
+                .split("\\n\\n");
     }
 }

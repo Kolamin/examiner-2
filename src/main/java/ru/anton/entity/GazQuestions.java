@@ -1,15 +1,14 @@
 package ru.anton.entity;
 
 import lombok.*;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@EqualsAndHashCode
 @Table(name = "gaz_questions")
 public class GazQuestions extends AbstractIdentifiableObject{
 
@@ -19,4 +18,10 @@ public class GazQuestions extends AbstractIdentifiableObject{
     @NonNull
     private String name;
 
+    @Getter
+    @Setter
+    @NonNull
+    @Column(length = 4000)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> testOptions;
 }

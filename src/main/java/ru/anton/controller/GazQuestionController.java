@@ -10,10 +10,12 @@ import ru.anton.repository.QuestionGazRepo;
 public class GazQuestionController {
     private final QuestionGazRepo questionGazRepo;
 
+
     @Autowired
     public GazQuestionController(QuestionGazRepo questionGazRepo) {
         this.questionGazRepo = questionGazRepo;
     }
+
 
     @GetMapping("/gazall")
     public String getAllGazQuestion(Model model){
