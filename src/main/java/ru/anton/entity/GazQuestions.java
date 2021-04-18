@@ -20,6 +20,10 @@ public class GazQuestions extends AbstractIdentifiableObject{
 
     @Getter
     @Setter
+    private String answer;
+
+    @Getter
+    @Setter
     @NonNull
     @Column(length = 4000)
     @ElementCollection(fetch = FetchType.EAGER)
