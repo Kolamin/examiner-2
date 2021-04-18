@@ -26,15 +26,15 @@ public class LoadDatabase {
             Examiner2Application obj = new Examiner2Application();
             InputStream inputStreamGazQuestion = obj.getClass()
                     .getClassLoader()
-                    .getResourceAsStream("files/Blog_7_1.txt");
+                    .getResourceAsStream("static/Blog_7_1.txt");
 
             InputStream inputStreamGazAnswer = obj.getClass()
                     .getClassLoader()
-                    .getResourceAsStream("files/Gaz_Answers.txt");
+                    .getResourceAsStream("static/Gaz_Answers.txt");
 
             //Preload questions and test options
-            String[] temp = getArray(inputStreamGazQuestion);
-            String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            String[] temp1 = getArray(inputStreamGazQuestion);
+            String[] arrayQuestion = Arrays.copyOfRange(temp1, 1, temp1.length);
 
             for (String s : arrayQuestion) {
                 String[] split = s.split("\\n");
@@ -45,13 +45,8 @@ public class LoadDatabase {
             //-----------------------------------------------------------------------
 
             //Preload corect answers
-            temp = getArray(inputStreamGazAnswer);
-            String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
-//            for (String s : temp) {
-//                String[] split = s.split("\\n");
-//                System.out.println(s);
-//                System.out.println(split.length);
-//            }
+           String[] temp2 = getArray(inputStreamGazAnswer);
+            String[] arrayAnswers = Arrays.copyOfRange(temp2, 1, temp2.length);
             for (String s : arrayAnswers) {
                 String[] split = s.split("\\n");
                 int length = split.length;

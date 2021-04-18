@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Table(name = "gaz_questions")
 public class GazQuestions extends AbstractIdentifiableObject{

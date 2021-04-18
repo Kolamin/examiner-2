@@ -14,7 +14,6 @@ import ru.anton.repository.QuestionGazRepo;
 @Controller
 public class GazQuestionController {
     private final QuestionGazRepo questionGazRepo;
-
     private final CorectGazAnswerRepo answerRepository;
 
 
@@ -32,15 +31,15 @@ public class GazQuestionController {
     }
 
     @GetMapping("/concrete/{id}")
-    public String getSingleGazQuestion(@PathVariable("id") Long id, Model model){
+    public String getSingleGazQuestion(@PathVariable("id") long id, Model model){
         model.addAttribute("gazquestion", questionGazRepo.findById(id));
         return "gazquestion";
     }
 
-    @PostMapping("/answer/{id}")
+    @PostMapping("/gazanswer/{id}")
     public String getGazAnswer(Model model, @ModelAttribute GazQuestions answer,
-                               @PathVariable("id") Long id){
-        model.addAttribute("answers",  answer);
+                               @PathVariable("id") long id){
+        model.addAttribute("answer",  answer);
         model.addAttribute("correctAnswer", answerRepository.findById(id));
         model.addAttribute("id", id);
         return "answer";
