@@ -5,10 +5,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.anton.Examiner2Application;
-import ru.anton.entity.CorectGazAnswer;
-import ru.anton.entity.GazQuestions;
-import ru.anton.repository.CorectGazAnswerRepo;
-import ru.anton.repository.QuestionGazRepo;
+import ru.anton.entity.gazentity.CorectGazAnswer;
+import ru.anton.entity.gazentity.GazQuestions;
+import ru.anton.entity.heatentity.HeatQuestion;
+import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
+import ru.anton.repository.gazrepo.QuestionGazRepo;
+import ru.anton.repository.heatrepo.CorectHeatAnswerRepo;
+import ru.anton.repository.heatrepo.HeatQuestionRepo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,9 +24,13 @@ import java.util.Arrays;
 public class LoadDatabase {
 
     @Bean
-    CommandLineRunner initDatabase(QuestionGazRepo gazRepo, CorectGazAnswerRepo corectGazAnswerRepo) {
+    CommandLineRunner initDatabase(QuestionGazRepo gazRepo,
+                                   CorectGazAnswerRepo corectGazAnswerRepo,
+                                   HeatQuestionRepo heatQuestionRepo,
+                                   CorectHeatAnswerRepo corectHeatAnswerRepo) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
+            //-----------------------------------------------------------
             InputStream inputStreamGazQuestion = obj.getClass()
                     .getClassLoader()
                     .getResourceAsStream("static/Blog_7_1.txt");
@@ -31,10 +38,19 @@ public class LoadDatabase {
             InputStream inputStreamGazAnswer = obj.getClass()
                     .getClassLoader()
                     .getResourceAsStream("static/Gaz_Answers.txt");
+            //------------------------------------------------------------
+            InputStream inputStreamHeatQuestion = obj.getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/Thermal_power_plants.txt");
 
-            //Preload questions and test options
-            String[] temp1 = getArray(inputStreamGazQuestion);
-            String[] arrayQuestion = Arrays.copyOfRange(temp1, 1, temp1.length);
+            InputStream inputStreamHeatAnswer = obj.getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/AnswerHeat.txt");
+            //----------------------------------------------------------
+
+            //Preload questions for gaz and test options
+            String[] temp = getArray(inputStreamGazQuestion);
+            String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
 
             for (String s : arrayQuestion) {
                 String[] split = s.split("\\n");
@@ -44,15 +60,24 @@ public class LoadDatabase {
             }
             //-----------------------------------------------------------------------
 
-            //Preload corect answers
-            String[] temp2 = getArray(inputStreamGazAnswer);
-            String[] arrayAnswers = Arrays.copyOfRange(temp2, 1, temp2.length);
+            //Preload corect gaz answers
+            temp = getArray(inputStreamGazAnswer);
+            String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
             for (String s : arrayAnswers) {
                 String[] split = s.split("\\n");
                 int length = split.length;
                 log.info("Preload answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1]) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
             }
+            //------------------------------------------------------------------------
 
+            //Preload question for heat and test options
+            temp = getArray(inputStreamHeatQuestion);
+             String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayHeatQuestion) {
+                String[] split = s.split("\\n");
+                heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length))));
+            }
+            //--------------------------------------------------------------------------
         };
     }
 

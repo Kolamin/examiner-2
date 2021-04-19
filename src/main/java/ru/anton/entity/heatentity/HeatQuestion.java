@@ -1,6 +1,7 @@
-package ru.anton.entity;
+package ru.anton.entity.heatentity;
 
 import lombok.*;
+import ru.anton.entity.AbstractIdentifiableObject;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,9 +10,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "gaz_questions")
-public class GazQuestions extends AbstractIdentifiableObject{
-
+@Table(name = "heat_questions")
+public class HeatQuestion extends AbstractIdentifiableObject {
     @Getter
     @Setter
     @Column(length = 4000)

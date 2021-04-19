@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.anton.entity.GazQuestions;
-import ru.anton.repository.CorectGazAnswerRepo;
-import ru.anton.repository.QuestionGazRepo;
+import ru.anton.entity.gazentity.GazQuestions;
+import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
+import ru.anton.repository.gazrepo.QuestionGazRepo;
 
 @Controller
 public class GazQuestionController {

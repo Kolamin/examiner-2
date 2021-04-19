@@ -1,7 +1,7 @@
-package ru.anton.repository;
+package ru.anton.repository.gazrepo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.anton.entity.CorectGazAnswer;
+import ru.anton.entity.gazentity.CorectGazAnswer;
 
 public interface CorectGazAnswerRepo extends JpaRepository<CorectGazAnswer, Long> {
 }
