@@ -23,6 +23,11 @@ public class GazQuestionController {
         this.answerRepository = answerRepository;
     }
 
+    @GetMapping("")
+    public String getHome(){
+        return "home";
+    }
+
 
     @GetMapping("/gazall")
     public String getAllGazQuestion(Model model){
@@ -30,17 +35,17 @@ public class GazQuestionController {
         return "gazquestions";
     }
 
-    @GetMapping("/concrete/{id}")
-    public String getSingleGazQuestion(@PathVariable("id") long id, Model model){
-        model.addAttribute("gazquestion", questionGazRepo.findById(id));
+    @GetMapping("/concretegaz/{id}")
+    public String getSingleGazQuestion(@PathVariable("id") Long id, Model model){
+        model.addAttribute("gazquestion", questionGazRepo.findById(id).orElseThrow());
         return "gazquestion";
     }
 
     @PostMapping("/gazanswer/{id}")
     public String getGazAnswer(Model model, @ModelAttribute GazQuestions answer,
-                               @PathVariable("id") long id){
+                               @PathVariable("id") Long id){
         model.addAttribute("answer",  answer);
-        model.addAttribute("correctAnswer", answerRepository.findById(id));
+        model.addAttribute("correctAnswer", answerRepository.findById(id).orElseThrow());
         model.addAttribute("id", id);
         return "answer";
     }

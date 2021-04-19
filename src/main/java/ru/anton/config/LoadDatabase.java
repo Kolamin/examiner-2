@@ -45,12 +45,12 @@ public class LoadDatabase {
             //-----------------------------------------------------------------------
 
             //Preload corect answers
-           String[] temp2 = getArray(inputStreamGazAnswer);
+            String[] temp2 = getArray(inputStreamGazAnswer);
             String[] arrayAnswers = Arrays.copyOfRange(temp2, 1, temp2.length);
             for (String s : arrayAnswers) {
                 String[] split = s.split("\\n");
                 int length = split.length;
-                log.info("Preload answer " + corectGazAnswerRepo.save(new CorectGazAnswer(split[1])));
+                log.info("Preload answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1]) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
             }
 
         };

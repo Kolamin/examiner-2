@@ -26,6 +26,6 @@ public class GazQuestions extends AbstractIdentifiableObject{
     @Setter
     @NonNull
     @Column(length = 4000)
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<String> testOptions;
 }

@@ -8,18 +8,18 @@
 </head>
 <body>
 <div class="container">
-    <form method="get" th:action="@{/concrete/{id}(id=${id > 236} ? 1 : ${id} + 1)}">
+    <form method="get" th:action="@{/concretegaz/{id}(id=${id > 236} ? 1 : ${id} + 1)}">
         <h3 th:text="'Ваш ответ на вопрос № ' + ${id} + ' -> ' + ${answer.getAnswer()}"></h3>
         <br>
         <h3 th:text="'Правильный ответ -> ' + ${correctAnswer.getCorrectAnswer()}"></h3>
         <br>
-        <h3 th:class="${answer.getAnswer().trim() eq correctAnswer.getCorrectAnswer().trim()}? 'text-success' : 'text-danger'"
-            th:text="${answer.getAnswer().trim() eq correctAnswer.getCorrectAnswer().trim()}? 'Верный ответ' : 'Ответ неверный'"></h3>
+        <h3 th:class="${answer.getAnswer().trim() == correctAnswer.getCorrectAnswer().trim()}? 'text-success' : 'text-danger'"
+            th:text="${answer.getAnswer().trim() == correctAnswer.getCorrectAnswer().trim()}? 'Верный ответ' : 'Ответ неверный'"></h3>
         <br>
         <input type="submit" value="Следующий вопрос" class="btn btn-primary">
     </form>
     <br>
-    <form th:action="@{/concrete/{id}(id=${answer.getId()})}" method="get">
+    <form th:action="@{/concretegaz/{id}(id=${answer.getId()})}" method="get">
         <input type="submit" value="Повторить вопрос" class="btn btn-warning">
     </form>
 </div>

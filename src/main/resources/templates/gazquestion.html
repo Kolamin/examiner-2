@@ -15,16 +15,20 @@
         <h4 th:text="*{getName()}"></h4>
         <br>
         <ul class="list-group">
+
             <li id="li" th:each="test: *{getTestOptions()}" class="list-group-item">
-                <input type="radio" th:field="${gazquestion.answer}" th:value="${test}" th:name="testOptions"
+                <input type="checkbox" th:field="${gazquestion.answer}" th:value="${test}" th:name="testOptions"
                        onclick="document.getElementById('push').disabled = false"
-                       class="form-check-input" aria-label="Radio button for following text input">
+                       class="form-check-input">
                 <label th:text="${test}"></label>
             </li>
         </ul>
         <br>
         <input th:id="push" type="submit" value="Ответить" disabled class="btn btn-primary">
     </form>
+    <br>
+    <br>
+    <a href="/">Вернуться к списку тем</a>
 </div>
 </body>
 </html>
