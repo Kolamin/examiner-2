@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.anton.Examiner2Application;
 import ru.anton.entity.gazentity.CorectGazAnswer;
 import ru.anton.entity.gazentity.GazQuestions;
+import ru.anton.entity.heatentity.CorectHeatAnswer;
 import ru.anton.entity.heatentity.HeatQuestion;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepo;
@@ -47,6 +48,7 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("static/AnswerHeat.txt");
             //----------------------------------------------------------
+            //----------------------------------------------------------
 
             //Preload questions for gaz and test options
             String[] temp = getArray(inputStreamGazQuestion);
@@ -55,7 +57,7 @@ public class LoadDatabase {
             for (String s : arrayQuestion) {
                 String[] split = s.split("\\n");
                 int length = split.length;
-                log.info("Preload database " + gazRepo.save(new GazQuestions(split[0],
+                log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
                         Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
             }
             //-----------------------------------------------------------------------
@@ -66,7 +68,7 @@ public class LoadDatabase {
             for (String s : arrayAnswers) {
                 String[] split = s.split("\\n");
                 int length = split.length;
-                log.info("Preload answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1]) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
+                log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1]) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
             }
             //------------------------------------------------------------------------
 
@@ -75,9 +77,18 @@ public class LoadDatabase {
              String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
             for (String s : arrayHeatQuestion) {
                 String[] split = s.split("\\n");
-                heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length))));
+                log.info("Preload heat database " + heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length)))));
             }
             //--------------------------------------------------------------------------
+
+            //Preload corect answer for heat
+            temp = getArray(inputStreamHeatAnswer);
+            String[] arrayCorectAnswer = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayCorectAnswer) {
+                String[] split = s.split("\\n");
+                log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
+            }
+
         };
     }
 
@@ -91,11 +102,15 @@ public class LoadDatabase {
             while ((st = br.readLine()) != null) {
                 if (st.contains("Билет"))
                     continue;
+                if (st.contains("Правила по охране труда при эксплуатации тепловых энергоустановок"))
+                    continue;
+                if (st.contains("Мероприятия по оказани первой помощи (Приказ Минздрава России от 04.05.2012 № 477н)"))
+                    continue;
                 content.append(st)
                         .append("\n");
             }
         }
         return content.toString()
-                .split("\\d+\\.\\s");
+                .split("(\\d+\\.\\s)|(Вопрос \\d+)");
     }
 }

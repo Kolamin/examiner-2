@@ -7,11 +7,15 @@
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 </head>
 <body>
-<header>
-    <h4>Список тем</h4>
-</header>
-<a th:href="@{/concretegaz/{id}(id = 1)}">Б.7.1. Эксплуатация систем газораспределения и газопотребления </a>
-<br>
-<a>Г.2.1. Правила технической эксплуатации тепловых энергоустановок</a>
+<div class="container">
+    <header>
+        <h4>Список тем</h4>
+    </header>
+    <a th:href="@{/concretegaz/{id}(id = 1)}">Б.7.1. Эксплуатация систем газораспределения и
+        газопотребления </a>
+    <br>
+    <br>
+    <a th:href="@{/heat/concrete/{id}(id = 1)}">Г.2.1. Правила технической эксплуатации тепловых энергоустановок</a>
+</div>
 </body>
 </html>

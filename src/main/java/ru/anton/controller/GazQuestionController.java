@@ -47,7 +47,7 @@ public class GazQuestionController {
         model.addAttribute("answer",  answer);
         model.addAttribute("correctAnswer", answerRepository.findById(id).orElseThrow());
         model.addAttribute("id", id);
-        return "answer";
+        return "answergaz";
     }
 
     @GetMapping("/answerall")
