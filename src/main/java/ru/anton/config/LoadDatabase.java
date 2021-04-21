@@ -68,7 +68,7 @@ public class LoadDatabase {
             for (String s : arrayAnswers) {
                 String[] split = s.split("\\n");
                 int length = split.length;
-                log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1]) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
+                log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1].trim()) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
             }
             //------------------------------------------------------------------------
 
