@@ -9,9 +9,9 @@
 <body>
 <div class="container">
     <form method="get" th:action="@{/concretegaz/{id}(id=${id > 236} ? 1 : ${id} + 1)}">
-        <h3 th:text="'Ваш ответ на вопрос № ' + ${id} + ' -> ' + ${answer.getAnswer()}"></h3>
+        <h3 th:text="'Ваш ответ на вопрос № ' + ${id} + ' -> ' + ${answer.getAnswer()}" class="text-primary"></h3>
         <br>
-        <h3 th:text="'Правильный ответ -> ' + ${correctAnswer.getCorrectAnswer()}"></h3>
+        <h3 th:text="'Правильный ответ -> ' + ${correctAnswer.getCorrectAnswer()}" class="text-success"></h3>
         <br>
         <h3 th:class="${answer.getAnswer().trim() == correctAnswer.getCorrectAnswer().trim()}? 'text-success' : 'text-danger'"
             th:text="${answer.getAnswer().trim() == correctAnswer.getCorrectAnswer().trim()}? 'Верный ответ' : 'Ответ неверный'"></h3>
