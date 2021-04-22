@@ -29,14 +29,14 @@ public class HeatQuestionController {
     @GetMapping("/concrete/{id}")
     public String getHeatQuestion(@PathVariable("id") Long id,
                                   Model model){
-        model.addAttribute("question", heatQuestionRepo.findById(id).orElseThrow());
+        model.addAttribute("question", heatQuestionRepo.findById(id));
         return "heatQuestion";
     }
 
     @PostMapping("/answer/{id}")
     public String getAnswer(Model model, @ModelAttribute HeatQuestion answer, @PathVariable("id") Long id){
         model.addAttribute("answers",  answer);
-        model.addAttribute("correctAnswer", corectHeatAnswerRepo.findById(id).orElseThrow());
+        model.addAttribute("correctAnswer", corectHeatAnswerRepo.findById(id));
         model.addAttribute("id", id);
         return "heatAnswer";
     }
