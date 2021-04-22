@@ -27,14 +27,14 @@ public class HeatQuestionController {
     }
 
     @GetMapping("/concrete/{id}")
-    public String getHeatQuestion(@PathVariable("id") Long id,
+    public String getHeatQuestion(@PathVariable("id") long id,
                                   Model model){
         model.addAttribute("question", heatQuestionRepo.findById(id));
         return "heatQuestion";
     }
 
     @PostMapping("/answer/{id}")
-    public String getAnswer(Model model, @ModelAttribute HeatQuestion answer, @PathVariable("id") Long id){
+    public String getAnswer(Model model, @ModelAttribute HeatQuestion answer, @PathVariable("id") long id){
         model.addAttribute("answers",  answer);
         model.addAttribute("correctAnswer", corectHeatAnswerRepo.findById(id));
         model.addAttribute("id", id);

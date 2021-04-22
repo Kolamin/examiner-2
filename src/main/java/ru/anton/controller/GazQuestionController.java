@@ -36,14 +36,14 @@ public class GazQuestionController {
     }
 
     @GetMapping("/concretegaz/{id}")
-    public String getSingleGazQuestion(@PathVariable("id") Long id, Model model){
+    public String getSingleGazQuestion(@PathVariable("id") long id, Model model){
         model.addAttribute("gazquestion", questionGazRepo.findById(id));
         return "gazquestion";
     }
 
     @PostMapping("/gazanswer/{id}")
     public String getGazAnswer(Model model, @ModelAttribute GazQuestions answer,
-                               @PathVariable("id") Long id){
+                               @PathVariable("id") long id){
         model.addAttribute("answer",  answer);
         model.addAttribute("correctAnswer", answerRepository.findById(id));
         model.addAttribute("id", id);
