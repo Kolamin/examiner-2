@@ -53,40 +53,41 @@ public class LoadDatabase {
             //Preload questions for gaz and test options
             String[] temp = getArray(inputStreamGazQuestion);
             String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            if(gazRepo.findAll().isEmpty()) {
+                for (String s : arrayQuestion) {
+                    String[] split = s.split("\\n");
+                    int length = split.length;
+                    log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
+                            Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
+                }
+                //-----------------------------------------------------------------------
 
-            for (String s : arrayQuestion) {
-                String[] split = s.split("\\n");
-                int length = split.length;
-                log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
-                        Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
-            }
-            //-----------------------------------------------------------------------
+                //Preload corect gaz answers
+                temp = getArray(inputStreamGazAnswer);
+                String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
+                for (String s : arrayAnswers) {
+                    String[] split = s.split("\\n");
+                    int length = split.length;
+                    log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1].trim()) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
+                }
+                //------------------------------------------------------------------------
 
-            //Preload corect gaz answers
-            temp = getArray(inputStreamGazAnswer);
-            String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
-            for (String s : arrayAnswers) {
-                String[] split = s.split("\\n");
-                int length = split.length;
-                log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1].trim()) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
-            }
-            //------------------------------------------------------------------------
+                //Preload question for heat and test options
+                temp = getArray(inputStreamHeatQuestion);
+                String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+                for (String s : arrayHeatQuestion) {
+                    String[] split = s.split("\\n");
+                    log.info("Preload heat database " + heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length)))));
+                }
+                //--------------------------------------------------------------------------
 
-            //Preload question for heat and test options
-            temp = getArray(inputStreamHeatQuestion);
-             String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
-            for (String s : arrayHeatQuestion) {
-                String[] split = s.split("\\n");
-                log.info("Preload heat database " + heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length)))));
-            }
-            //--------------------------------------------------------------------------
-
-            //Preload corect answer for heat
-            temp = getArray(inputStreamHeatAnswer);
-            String[] arrayCorectAnswer = Arrays.copyOfRange(temp, 1, temp.length);
-            for (String s : arrayCorectAnswer) {
-                String[] split = s.split("\\n");
-                log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
+                //Preload correct answer for heat
+                temp = getArray(inputStreamHeatAnswer);
+                String[] arrayCorrectAnswer = Arrays.copyOfRange(temp, 1, temp.length);
+                for (String s : arrayCorrectAnswer) {
+                    String[] split = s.split("\\n");
+                    log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
+                }
             }
 
         };

@@ -22,6 +22,7 @@ public class GazQuestionController {
         this.questionGazRepo = questionGazRepo;
         this.answerRepository = answerRepository;
     }
+    
 
     @GetMapping("")
     public String getHome(){
