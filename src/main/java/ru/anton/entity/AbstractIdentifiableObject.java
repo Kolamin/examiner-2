@@ -16,5 +16,5 @@ public abstract class AbstractIdentifiableObject{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
-    private Long id;
+    private long id;
 }

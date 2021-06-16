@@ -7,10 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import ru.anton.Examiner2Application;
 import ru.anton.entity.gazentity.CorectGazAnswer;
 import ru.anton.entity.gazentity.GazQuestions;
+import ru.anton.entity.gazentity.GazQuestionsNew;
 import ru.anton.entity.heatentity.CorectHeatAnswer;
 import ru.anton.entity.heatentity.HeatQuestion;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepo;
+import ru.anton.repository.gazrepo.QuestionGazRepoNew;
 import ru.anton.repository.heatrepo.CorectHeatAnswerRepo;
 import ru.anton.repository.heatrepo.HeatQuestionRepo;
 
@@ -26,6 +28,7 @@ public class LoadDatabase {
 
     @Bean
     CommandLineRunner initDatabase(QuestionGazRepo gazRepo,
+                                   QuestionGazRepoNew gazNewRepo,
                                    CorectGazAnswerRepo corectGazAnswerRepo,
                                    HeatQuestionRepo heatQuestionRepo,
                                    CorectHeatAnswerRepo corectHeatAnswerRepo) {
@@ -48,11 +51,27 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("static/AnswerHeat.txt");
             //----------------------------------------------------------
+
             //----------------------------------------------------------
+            //New questions for gaz
+            InputStream inputStreamGazQuestionNew = obj.getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/Blog_7_1_new.txt");
+            //-----------------------------------------------------------
+
+            //Preload new questions for gaz and test options
+            String[] tempNew = getArray(inputStreamGazQuestionNew);
+            String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
+            for (String s : arrayQuestionNew) {
+                String[] split = s.split("\\n");
+                int length = split.length;
+                log.info("Preload gaz database new" + gazNewRepo.save(new GazQuestionsNew(split[0])));
+            }
+            //-----------------------------------------------------------------------
 
             //Preload questions for gaz and test options
-            String[] temp = getArray(inputStreamGazQuestion);
-            String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            String[]temp = getArray(inputStreamGazQuestion);
+            String[]arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
             for (String s : arrayQuestion) {
                 String[] split = s.split("\\n");
                 int length = split.length;
