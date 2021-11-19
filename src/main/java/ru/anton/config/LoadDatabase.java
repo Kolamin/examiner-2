@@ -59,59 +59,55 @@ public class LoadDatabase {
                     .getResourceAsStream("static/Blog_7_1_new.txt");
             //-----------------------------------------------------------
 
-            //initDatabaseForAllTests(gazRepo, gazNewRepo, corectGazAnswerRepo, heatQuestionRepo, corectHeatAnswerRepo, inputStreamGazQuestion, inputStreamGazAnswer, inputStreamHeatQuestion, inputStreamHeatAnswer, inputStreamGazQuestionNew);
+            //Preload new questions for gaz and test options
+            String[] tempNew = getArray(inputStreamGazQuestionNew);
+            String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
+            for (String s : arrayQuestionNew) {
+                String[] split = s.split("\\n");
+                int length = split.length;
+                log.info("Preload gaz database new" + gazNewRepo.save(new GazQuestionsNew(split[0])));
+            }
+            //-----------------------------------------------------------------------
+
+            //Preload questions for gaz and test options
+            String[]temp = getArray(inputStreamGazQuestion);
+            String[]arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayQuestion) {
+                String[] split = s.split("\\n");
+                int length = split.length;
+                log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
+                        Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
+            }
+            //-----------------------------------------------------------------------
+
+            //Preload corect gaz answers
+            temp = getArray(inputStreamGazAnswer);
+            String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayAnswers) {
+                String[] split = s.split("\\n");
+                int length = split.length;
+                log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1].trim()) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
+            }
+            //------------------------------------------------------------------------
+
+            //Preload question for heat and test options
+            temp = getArray(inputStreamHeatQuestion);
+            String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayHeatQuestion) {
+                String[] split = s.split("\\n");
+                log.info("Preload heat database " + heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length)))));
+            }
+            //--------------------------------------------------------------------------
+
+            //Preload correct answer for heat
+            temp = getArray(inputStreamHeatAnswer);
+            String[] arrayCorrectAnswer = Arrays.copyOfRange(temp, 1, temp.length);
+            for (String s : arrayCorrectAnswer) {
+                String[] split = s.split("\\n");
+                log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
+            }
 
         };
-    }
-
-    private void initDatabaseForAllTests(QuestionGazRepo gazRepo, QuestionGazRepoNew gazNewRepo, CorectGazAnswerRepo corectGazAnswerRepo, HeatQuestionRepo heatQuestionRepo, CorectHeatAnswerRepo corectHeatAnswerRepo, InputStream inputStreamGazQuestion, InputStream inputStreamGazAnswer, InputStream inputStreamHeatQuestion, InputStream inputStreamHeatAnswer, InputStream inputStreamGazQuestionNew) throws IOException {
-        //Preload new questions for gaz and test options
-        String[] tempNew = getArray(inputStreamGazQuestionNew);
-        String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
-        for (String s : arrayQuestionNew) {
-            String[] split = s.split("\\n");
-            int length = split.length;
-            log.info("Preload gaz database new" + gazNewRepo.save(new GazQuestionsNew(split[0])));
-        }
-        //-----------------------------------------------------------------------
-
-        //Preload questions for gaz and test options
-        String[]temp = getArray(inputStreamGazQuestion);
-        String[]arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
-        for (String s : arrayQuestion) {
-            String[] split = s.split("\\n");
-            int length = split.length;
-            log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
-                    Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
-        }
-        //-----------------------------------------------------------------------
-
-        //Preload corect gaz answers
-        temp = getArray(inputStreamGazAnswer);
-        String[] arrayAnswers = Arrays.copyOfRange(temp, 1, temp.length);
-        for (String s : arrayAnswers) {
-            String[] split = s.split("\\n");
-            int length = split.length;
-            log.info("Preload gaz answer " + corectGazAnswerRepo.save(length == 2 ? new CorectGazAnswer(split[1].trim()) : new CorectGazAnswer(split[1].trim() + ",\t" + split[2].trim())));
-        }
-        //------------------------------------------------------------------------
-
-        //Preload question for heat and test options
-        temp = getArray(inputStreamHeatQuestion);
-        String[] arrayHeatQuestion = Arrays.copyOfRange(temp, 1, temp.length);
-        for (String s : arrayHeatQuestion) {
-            String[] split = s.split("\\n");
-            log.info("Preload heat database " + heatQuestionRepo.save(new HeatQuestion(split[1], Arrays.asList(Arrays.copyOfRange(split, 2, split.length)))));
-        }
-        //--------------------------------------------------------------------------
-
-        //Preload correct answer for heat
-        temp = getArray(inputStreamHeatAnswer);
-        String[] arrayCorrectAnswer = Arrays.copyOfRange(temp, 1, temp.length);
-        for (String s : arrayCorrectAnswer) {
-            String[] split = s.split("\\n");
-            log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
-        }
     }
 
     private String[] getArray(InputStream inputStream) throws IOException {
