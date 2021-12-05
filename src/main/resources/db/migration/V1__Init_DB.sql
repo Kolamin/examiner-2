@@ -71,3 +71,4 @@ alter table if exists heat_question_test_options
     add constraint FKah6mqoif0hfl2cepfbi6r2y5i foreign key (heat_question_id) references heat_questions;
 alter table if exists industrial_questions_test_options
     add constraint FKg7s77gor49xouw5lbhkkrfmn foreign key (industrial_questions_id) references industrial_questions;
+;
