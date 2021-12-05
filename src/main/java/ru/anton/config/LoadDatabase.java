@@ -76,7 +76,7 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("static/A_1_answer.txt");
 
-           /* preloadDatabaseForAllTests(gazRepo,
+            preloadDatabaseForAllTests(gazRepo,
                     gazNewRepo,
                     corectGazAnswerRepo,
                     heatQuestionRepo,
@@ -89,7 +89,7 @@ public class LoadDatabase {
                     inputStreamHeatAnswer,
                     inputStreamGazQuestionNew,
                     inputIndustrialQuestions,
-                    inputIndustAnswer);*/
+                    inputIndustAnswer);
 
         };
     }
