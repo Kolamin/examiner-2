@@ -7,11 +7,11 @@
 <body>
 <div th:each="question : ${gaz}">
     <h3 th:text="${question.getId()} + '. ' + ${question.getName()}"></h3>
-<!--    <div th:each="test : ${question.getTestOptions()}">-->
-<!--        <ul th:each="el : ${test}">-->
-<!--            <li th:text="${el}"></li>-->
-<!--        </ul>-->
-<!--    </div>-->
+    <!--    <div th:each="test : ${question.getTestOptions()}">-->
+    <!--        <ul th:each="el : ${test}">-->
+    <!--            <li th:text="${el}"></li>-->
+    <!--        </ul>-->
+    <!--    </div>-->
 </div>
 </body>
 </html>

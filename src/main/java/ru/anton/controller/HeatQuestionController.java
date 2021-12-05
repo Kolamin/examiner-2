@@ -21,21 +21,21 @@ public class HeatQuestionController {
     }
 
     @GetMapping("/heatall")
-    public String getAllHeatQuestion(Model model){
+    public String getAllHeatQuestion(Model model) {
         model.addAttribute("heatQuestions", heatQuestionRepo.findAll());
         return "heatall";
     }
 
     @GetMapping("/concrete/{id}")
     public String getHeatQuestion(@PathVariable("id") long id,
-                                  Model model){
+                                  Model model) {
         model.addAttribute("question", heatQuestionRepo.findById(id));
         return "heatQuestion";
     }
 
     @PostMapping("/answer/{id}")
-    public String getAnswer(Model model, @ModelAttribute HeatQuestion answer, @PathVariable("id") long id){
-        model.addAttribute("answers",  answer);
+    public String getAnswer(Model model, @ModelAttribute HeatQuestion answer, @PathVariable("id") long id) {
+        model.addAttribute("answers", answer);
         model.addAttribute("correctAnswer", corectHeatAnswerRepo.findById(id));
         model.addAttribute("id", id);
         return "heatAnswer";

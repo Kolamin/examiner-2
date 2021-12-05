@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @ToString
-public abstract class AbstractIdentifiableObject{
+public abstract class AbstractIdentifiableObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter

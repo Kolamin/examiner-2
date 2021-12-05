@@ -10,11 +10,15 @@ import ru.anton.entity.gazentity.GazQuestions;
 import ru.anton.entity.gazentity.GazQuestionsNew;
 import ru.anton.entity.heatentity.CorectHeatAnswer;
 import ru.anton.entity.heatentity.HeatQuestion;
+import ru.anton.entity.industrial.CorrectIndustAnswer;
+import ru.anton.entity.industrial.IndustrialQuestions;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepoNew;
 import ru.anton.repository.heatrepo.CorectHeatAnswerRepo;
 import ru.anton.repository.heatrepo.HeatQuestionRepo;
+import ru.anton.repository.industrepo.CorrectAnswerIndustRepository;
+import ru.anton.repository.industrepo.IndustrialRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +35,9 @@ public class LoadDatabase {
                                    QuestionGazRepoNew gazNewRepo,
                                    CorectGazAnswerRepo corectGazAnswerRepo,
                                    HeatQuestionRepo heatQuestionRepo,
-                                   CorectHeatAnswerRepo corectHeatAnswerRepo) {
+                                   CorectHeatAnswerRepo corectHeatAnswerRepo,
+                                   IndustrialRepository indRepo,
+                                   CorrectAnswerIndustRepository correctAnswerIndustRepository) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
             //-----------------------------------------------------------
@@ -59,12 +65,49 @@ public class LoadDatabase {
                     .getResourceAsStream("static/Blog_7_1_new.txt");
             //-----------------------------------------------------------
 
-           // preloadDatabaseForAllTests(gazRepo, gazNewRepo, corectGazAnswerRepo, heatQuestionRepo, corectHeatAnswerRepo, inputStreamGazQuestion, inputStreamGazAnswer, inputStreamHeatQuestion, inputStreamHeatAnswer, inputStreamGazQuestionNew);
+            //-----------------------------------------------------------
+            InputStream inputIndustrialQuestions = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/A_1_tests.txt");
+
+            InputStream inputIndustAnswer = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/A_1_answer.txt");
+
+            /*preloadDatabaseForAllTests(gazRepo,
+                    gazNewRepo,
+                    corectGazAnswerRepo,
+                    heatQuestionRepo,
+                    corectHeatAnswerRepo,
+                    indRepo,
+                    correctAnswerIndustRepository,
+                    inputStreamGazQuestion,
+                    inputStreamGazAnswer,
+                    inputStreamHeatQuestion,
+                    inputStreamHeatAnswer,
+                    inputStreamGazQuestionNew,
+                    inputIndustrialQuestions,
+                    inputIndustAnswer);*/
 
         };
     }
 
-    private void preloadDatabaseForAllTests(QuestionGazRepo gazRepo, QuestionGazRepoNew gazNewRepo, CorectGazAnswerRepo corectGazAnswerRepo, HeatQuestionRepo heatQuestionRepo, CorectHeatAnswerRepo corectHeatAnswerRepo, InputStream inputStreamGazQuestion, InputStream inputStreamGazAnswer, InputStream inputStreamHeatQuestion, InputStream inputStreamHeatAnswer, InputStream inputStreamGazQuestionNew) throws IOException {
+    private void preloadDatabaseForAllTests(QuestionGazRepo gazRepo,
+                                            QuestionGazRepoNew gazNewRepo,
+                                            CorectGazAnswerRepo corectGazAnswerRepo,
+                                            HeatQuestionRepo heatQuestionRepo,
+                                            CorectHeatAnswerRepo corectHeatAnswerRepo,
+                                            IndustrialRepository indRepo,
+                                            CorrectAnswerIndustRepository correctAnswerIndustRepository,
+                                            InputStream inputStreamGazQuestion,
+                                            InputStream inputStreamGazAnswer,
+                                            InputStream inputStreamHeatQuestion,
+                                            InputStream inputStreamHeatAnswer,
+                                            InputStream inputStreamGazQuestionNew,
+                                            InputStream inputIndustrialQuestions,
+                                            InputStream inputIndustAnswer) throws IOException {
         //Preload new questions for gaz and test options
         String[] tempNew = getArray(inputStreamGazQuestionNew);
         String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
@@ -76,13 +119,12 @@ public class LoadDatabase {
         //-----------------------------------------------------------------------
 
         //Preload questions for gaz and test options
-        String[]temp = getArray(inputStreamGazQuestion);
-        String[]arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+        String[] temp = getArray(inputStreamGazQuestion);
+        String[] arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
         for (String s : arrayQuestion) {
             String[] split = s.split("\\n");
             int length = split.length;
-            log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0],
-                    Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
+            log.info("Preload gaz database " + gazRepo.save(new GazQuestions(split[0], Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
         }
         //-----------------------------------------------------------------------
 
@@ -111,6 +153,28 @@ public class LoadDatabase {
         for (String s : arrayCorrectAnswer) {
             String[] split = s.split("\\n");
             log.info("Preload heat answer " + corectHeatAnswerRepo.save(new CorectHeatAnswer(split[2])));
+        }
+
+        //Preload for indust
+        temp = getArray(inputIndustrialQuestions);
+        String[] arrayIndustQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+
+        for (String s : arrayIndustQuestion) {
+            String[] split = s.split("\\n");
+            int length = split.length;
+            log.info("Preload industrial question database " + indRepo
+                    .save(new IndustrialQuestions(split[0],
+                            Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
+        }
+
+        temp = getArray(inputIndustAnswer);
+        arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+        for (String s : arrayQuestion) {
+            String[] split = s.split("\\n");
+            log.info("Preload answer for industrial" + correctAnswerIndustRepository
+                    .save(new CorrectIndustAnswer(split[0] ,Arrays
+                            .asList(Arrays.
+                                    copyOfRange(split, 1, split.length)))));
         }
     }
 
