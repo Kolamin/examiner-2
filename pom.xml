@@ -81,6 +81,11 @@ http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.1.1</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/exdb</url>
+                    <user>postgres</user>
+                    <password>1234</password>
+                </configuration>
             </plugin>
         </plugins>
     </build>
