@@ -12,6 +12,8 @@ import ru.anton.entity.heatentity.CorectHeatAnswer;
 import ru.anton.entity.heatentity.HeatQuestion;
 import ru.anton.entity.industrial.CorrectIndustAnswer;
 import ru.anton.entity.industrial.IndustrialQuestions;
+import ru.anton.entity.oilentity.CorrectOilAnswer;
+import ru.anton.entity.oilentity.OilQuestions;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepoNew;
@@ -19,6 +21,8 @@ import ru.anton.repository.heatrepo.CorectHeatAnswerRepo;
 import ru.anton.repository.heatrepo.HeatQuestionRepo;
 import ru.anton.repository.industrepo.CorrectAnswerIndustRepository;
 import ru.anton.repository.industrepo.IndustrialRepository;
+import ru.anton.repository.oilrepo.CorrectAnswerOilRepo;
+import ru.anton.repository.oilrepo.OilAllQuestRepo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +41,9 @@ public class LoadDatabase {
                                    HeatQuestionRepo heatQuestionRepo,
                                    CorectHeatAnswerRepo corectHeatAnswerRepo,
                                    IndustrialRepository indRepo,
-                                   CorrectAnswerIndustRepository correctAnswerIndustRepository) {
+                                   CorrectAnswerIndustRepository correctAnswerIndustRepository,
+                                   OilAllQuestRepo oilAllQuestRepo,
+                                   CorrectAnswerOilRepo answerOilRepo) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
             //-----------------------------------------------------------
@@ -76,6 +82,18 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("static/A_1_answer.txt");
 
+            //-------------------Oil-----------------------------------
+            InputStream inputOilQuestions = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/B_1_7_ALL.txt");
+
+
+            InputStream inputOilAnswers = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("static/B_1_7_ANSWERS.txt");
+
             preloadDatabaseForAllTests(gazRepo,
                     gazNewRepo,
                     corectGazAnswerRepo,
@@ -83,13 +101,17 @@ public class LoadDatabase {
                     corectHeatAnswerRepo,
                     indRepo,
                     correctAnswerIndustRepository,
+                    oilAllQuestRepo,
+                    answerOilRepo,
                     inputStreamGazQuestion,
                     inputStreamGazAnswer,
                     inputStreamHeatQuestion,
                     inputStreamHeatAnswer,
                     inputStreamGazQuestionNew,
                     inputIndustrialQuestions,
-                    inputIndustAnswer);
+                    inputIndustAnswer,
+                    inputOilQuestions,
+                    inputOilAnswers);
 
         };
     }
@@ -101,19 +123,23 @@ public class LoadDatabase {
                                             CorectHeatAnswerRepo corectHeatAnswerRepo,
                                             IndustrialRepository indRepo,
                                             CorrectAnswerIndustRepository correctAnswerIndustRepository,
+                                            OilAllQuestRepo oilAllQuestRepo,
+                                            CorrectAnswerOilRepo answerOilRepo,
                                             InputStream inputStreamGazQuestion,
                                             InputStream inputStreamGazAnswer,
                                             InputStream inputStreamHeatQuestion,
                                             InputStream inputStreamHeatAnswer,
                                             InputStream inputStreamGazQuestionNew,
                                             InputStream inputIndustrialQuestions,
-                                            InputStream inputIndustAnswer) throws IOException {
+                                            InputStream inputIndustAnswer,
+                                            InputStream inputOilQuestions,
+                                            InputStream inputOilAnswers) throws IOException {
         //Preload new questions for gaz and test options
         String[] tempNew = getArray(inputStreamGazQuestionNew);
         String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
         for (String s : arrayQuestionNew) {
             String[] split = s.split("\\n");
-            int length = split.length;
+            //int length = split.length;
             log.info("Preload gaz database new" + gazNewRepo.save(new GazQuestionsNew(split[0])));
         }
         //-----------------------------------------------------------------------
@@ -173,6 +199,28 @@ public class LoadDatabase {
             String[] split = s.split("\\n");
             log.info("Preload answer for industrial" + correctAnswerIndustRepository
                     .save(new CorrectIndustAnswer(split[0] ,Arrays
+                            .asList(Arrays.
+                                    copyOfRange(split, 1, split.length)))));
+        }
+
+        //---------------------------------------------------------------------------
+        //Preload for oil
+        temp = getArray(inputOilQuestions);
+        arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+        for (String s : arrayQuestion) {
+            String[] split = s.split("\\n");
+            int length = split.length;
+            log.info("Preload oil question database " + oilAllQuestRepo
+                    .save(new OilQuestions(split[0],
+                            Arrays.asList(Arrays.copyOfRange(split, 1, length)))));
+        }
+
+        temp = getArray(inputOilAnswers);
+        arrayQuestion = Arrays.copyOfRange(temp, 1, temp.length);
+        for (String s : arrayQuestion) {
+            String[] split = s.split("\\n");
+            log.info("Preload answer for oil" + answerOilRepo
+                    .save(new CorrectOilAnswer(split[0] ,Arrays
                             .asList(Arrays.
                                     copyOfRange(split, 1, split.length)))));
         }
