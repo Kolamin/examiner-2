@@ -5,6 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.anton.Examiner2Application;
+import ru.anton.entity.boilerentity.BoilerQuestions;
+import ru.anton.entity.boilerentity.ConcreteBoilerAnswer;
 import ru.anton.entity.gazentity.CorectGazAnswer;
 import ru.anton.entity.gazentity.GazQuestions;
 import ru.anton.entity.gazentity.GazQuestionsNew;
@@ -14,6 +16,8 @@ import ru.anton.entity.industrial.CorrectIndustAnswer;
 import ru.anton.entity.industrial.IndustrialQuestions;
 import ru.anton.entity.oilentity.CorrectOilAnswer;
 import ru.anton.entity.oilentity.OilQuestions;
+import ru.anton.repository.boilerrepo.BoilerRepository;
+import ru.anton.repository.boilerrepo.CorrectAnswerBoilerRepo;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepo;
 import ru.anton.repository.gazrepo.QuestionGazRepoNew;
@@ -43,7 +47,9 @@ public class LoadDatabase {
                                    IndustrialRepository indRepo,
                                    CorrectAnswerIndustRepository correctAnswerIndustRepository,
                                    OilAllQuestRepo oilAllQuestRepo,
-                                   CorrectAnswerOilRepo answerOilRepo) {
+                                   CorrectAnswerOilRepo answerOilRepo,
+                                   BoilerRepository boilerRepository,
+                                   CorrectAnswerBoilerRepo correctAnswerBoilerRepo) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
             //-----------------------------------------------------------
@@ -94,6 +100,17 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream("static/B_1_7_ANSWERS.txt");
 
+            //------------------Boiler-----------------------------------
+            InputStream inputBoilerQuestions = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_1_ALL.txt" );
+
+            InputStream inputBoilerAnswers = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_1_ANSWER.txt" );
+
             preloadDatabaseForAllTests(gazRepo,
                     gazNewRepo,
                     corectGazAnswerRepo,
@@ -103,6 +120,8 @@ public class LoadDatabase {
                     correctAnswerIndustRepository,
                     oilAllQuestRepo,
                     answerOilRepo,
+                    boilerRepository,
+                    correctAnswerBoilerRepo,
                     inputStreamGazQuestion,
                     inputStreamGazAnswer,
                     inputStreamHeatQuestion,
@@ -111,7 +130,9 @@ public class LoadDatabase {
                     inputIndustrialQuestions,
                     inputIndustAnswer,
                     inputOilQuestions,
-                    inputOilAnswers);
+                    inputOilAnswers,
+                    inputBoilerQuestions,
+                    inputBoilerAnswers);
 
         };
     }
@@ -125,6 +146,8 @@ public class LoadDatabase {
                                             CorrectAnswerIndustRepository correctAnswerIndustRepository,
                                             OilAllQuestRepo oilAllQuestRepo,
                                             CorrectAnswerOilRepo answerOilRepo,
+                                            BoilerRepository boilerRepository,
+                                            CorrectAnswerBoilerRepo correctAnswerBoilerRepo,
                                             InputStream inputStreamGazQuestion,
                                             InputStream inputStreamGazAnswer,
                                             InputStream inputStreamHeatQuestion,
@@ -133,7 +156,9 @@ public class LoadDatabase {
                                             InputStream inputIndustrialQuestions,
                                             InputStream inputIndustAnswer,
                                             InputStream inputOilQuestions,
-                                            InputStream inputOilAnswers) throws IOException {
+                                            InputStream inputOilAnswers,
+                                            InputStream inputBoilerQuestions,
+                                            InputStream inputBoilerAnswers) throws IOException {
         //Preload new questions for gaz and test options
         String[] tempNew = getArray(inputStreamGazQuestionNew);
         String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
@@ -223,6 +248,28 @@ public class LoadDatabase {
                     .save(new CorrectOilAnswer(split[0] ,Arrays
                             .asList(Arrays.
                                     copyOfRange(split, 1, split.length)))));
+        }
+
+        //-------------------------------------------------------------------------------
+        //Preload boiler
+        temp = getArray( inputBoilerQuestions );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            int length = split.length;
+            log.info( "Preload boiler question database " + boilerRepository
+                    .save( new BoilerQuestions( split[0],
+                            Arrays.asList( Arrays.copyOfRange( split, 1, length ) ) ) ) );
+        }
+
+        temp = getArray( inputBoilerAnswers );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            log.info( "Preload answer for boiler" + correctAnswerBoilerRepo
+                    .save( new ConcreteBoilerAnswer( split[0], Arrays
+                            .asList( Arrays.
+                                    copyOfRange( split, 1, split.length ) ) ) ) );
         }
     }
 
