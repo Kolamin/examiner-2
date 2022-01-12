@@ -16,6 +16,8 @@ import ru.anton.entity.industrial.CorrectIndustAnswer;
 import ru.anton.entity.industrial.IndustrialQuestions;
 import ru.anton.entity.oilentity.CorrectOilAnswer;
 import ru.anton.entity.oilentity.OilQuestions;
+import ru.anton.entity.pipes.CorrectPipeAnswer;
+import ru.anton.entity.pipes.PipeQuestions;
 import ru.anton.repository.boilerrepo.BoilerRepository;
 import ru.anton.repository.boilerrepo.CorrectAnswerBoilerRepo;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
@@ -27,6 +29,8 @@ import ru.anton.repository.industrepo.CorrectAnswerIndustRepository;
 import ru.anton.repository.industrepo.IndustrialRepository;
 import ru.anton.repository.oilrepo.CorrectAnswerOilRepo;
 import ru.anton.repository.oilrepo.OilAllQuestRepo;
+import ru.anton.repository.piperepo.CorrectPipeAnswerRepo;
+import ru.anton.repository.piperepo.PipeRepo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,7 +53,9 @@ public class LoadDatabase {
                                    OilAllQuestRepo oilAllQuestRepo,
                                    CorrectAnswerOilRepo answerOilRepo,
                                    BoilerRepository boilerRepository,
-                                   CorrectAnswerBoilerRepo correctAnswerBoilerRepo) {
+                                   CorrectAnswerBoilerRepo correctAnswerBoilerRepo,
+                                   PipeRepo pipeRepo,
+                                   CorrectPipeAnswerRepo pipeAnswerRepo) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
             //-----------------------------------------------------------
@@ -111,6 +117,18 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream( "static/B_8_1_ANSWER.txt" );
 
+            //---------------Pipe----------------------------------------
+            InputStream inputPipeQuestions = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_2_ALL.txt" );
+
+
+            InputStream inputPipeAnswers = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_2_ANSWER.txt" );
+
             preloadDatabaseForAllTests(gazRepo,
                     gazNewRepo,
                     corectGazAnswerRepo,
@@ -122,6 +140,8 @@ public class LoadDatabase {
                     answerOilRepo,
                     boilerRepository,
                     correctAnswerBoilerRepo,
+                    pipeRepo,
+                    pipeAnswerRepo,
                     inputStreamGazQuestion,
                     inputStreamGazAnswer,
                     inputStreamHeatQuestion,
@@ -132,7 +152,9 @@ public class LoadDatabase {
                     inputOilQuestions,
                     inputOilAnswers,
                     inputBoilerQuestions,
-                    inputBoilerAnswers);
+                    inputBoilerAnswers,
+                    inputPipeQuestions,
+                    inputPipeAnswers);
 
         };
     }
@@ -148,6 +170,8 @@ public class LoadDatabase {
                                             CorrectAnswerOilRepo answerOilRepo,
                                             BoilerRepository boilerRepository,
                                             CorrectAnswerBoilerRepo correctAnswerBoilerRepo,
+                                            PipeRepo pipeRepo,
+                                            CorrectPipeAnswerRepo pipeAnswerRepo,
                                             InputStream inputStreamGazQuestion,
                                             InputStream inputStreamGazAnswer,
                                             InputStream inputStreamHeatQuestion,
@@ -158,7 +182,9 @@ public class LoadDatabase {
                                             InputStream inputOilQuestions,
                                             InputStream inputOilAnswers,
                                             InputStream inputBoilerQuestions,
-                                            InputStream inputBoilerAnswers) throws IOException {
+                                            InputStream inputBoilerAnswers,
+                                            InputStream inputPipeQuestions,
+                                            InputStream inputPipeAnswers) throws IOException {
         //Preload new questions for gaz and test options
         String[] tempNew = getArray(inputStreamGazQuestionNew);
         String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
@@ -270,6 +296,26 @@ public class LoadDatabase {
                     .save( new ConcreteBoilerAnswer( split[0], Arrays
                             .asList( Arrays.
                                     copyOfRange( split, 1, split.length ) ) ) ) );
+        }
+
+        //-------------------------------------------------------------------------------
+        //Preload pipe
+        temp = getArray( inputPipeQuestions );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            int length = split.length;
+            log.info( "Preload pipe question database " + pipeRepo
+                    .save( new PipeQuestions( split[0],
+                            Arrays.asList( Arrays.copyOfRange( split, 1, length ) ) ) ) );
+        }
+
+        temp = getArray( inputPipeAnswers );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            log.info( "Preload answer for pipe" + pipeAnswerRepo
+                    .save( new CorrectPipeAnswer( split[1] ) ) );
         }
     }
 
