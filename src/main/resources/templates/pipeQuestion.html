@@ -16,7 +16,7 @@
         <br>
         <ul class="list-group">
             <li id="li" th:each="test : *{getTestOptions()}" class="list-group-item">
-                <input type="radio" th:field="${question.answer}" th:value="${test}" th:name="testOptions"
+                <input th:type="${question.id == 6}? 'checkbox' : 'radio'"   th:field="${question.answer}" th:value="${test}" th:name="testOptions"
                        onclick="document.getElementById('push').disabled = false" class="form-check-input"
                        aria-label="Radio button for following text input">
                 <label th:text="${test}"></label>
