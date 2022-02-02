@@ -7,7 +7,6 @@ import ru.anton.entity.industrial.CorrectIndustAnswer;
 import ru.anton.entity.industrial.IndustrialQuestions;
 import ru.anton.repository.industrepo.CorrectAnswerIndustRepository;
 import ru.anton.repository.industrepo.IndustrialRepository;
-import ru.anton.repository.industrepo.CorrectAnswerIndustRepository;
 
 @Controller
 @RequestMapping("/indust")
@@ -35,7 +34,7 @@ public class IndustrialController {
 
     @GetMapping("/concreteindust/{id}")
     public String getSingleIndustQuestion(Model model, @PathVariable("id") long id) {
-        model.addAttribute("question", industrialRepository.findById(id));
+        model.addAttribute("question", industrialRepository.findById( id ) );
         return "industQuestion";
     }
 
