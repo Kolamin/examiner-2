@@ -18,6 +18,8 @@ import ru.anton.entity.oilentity.CorrectOilAnswer;
 import ru.anton.entity.oilentity.OilQuestions;
 import ru.anton.entity.pipes.CorrectPipeAnswer;
 import ru.anton.entity.pipes.PipeQuestions;
+import ru.anton.entity.vessel.CorrectVesselAnswer;
+import ru.anton.entity.vessel.VesselQuestions;
 import ru.anton.repository.boilerrepo.BoilerRepository;
 import ru.anton.repository.boilerrepo.CorrectAnswerBoilerRepo;
 import ru.anton.repository.gazrepo.CorectGazAnswerRepo;
@@ -31,6 +33,8 @@ import ru.anton.repository.oilrepo.CorrectAnswerOilRepo;
 import ru.anton.repository.oilrepo.OilAllQuestRepo;
 import ru.anton.repository.piperepo.CorrectPipeAnswerRepo;
 import ru.anton.repository.piperepo.PipeRepo;
+import ru.anton.repository.vesselrepo.CorrectVesselAnswerRepo;
+import ru.anton.repository.vesselrepo.VesselRepo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +59,9 @@ public class LoadDatabase {
                                    BoilerRepository boilerRepository,
                                    CorrectAnswerBoilerRepo correctAnswerBoilerRepo,
                                    PipeRepo pipeRepo,
-                                   CorrectPipeAnswerRepo pipeAnswerRepo) {
+                                   CorrectPipeAnswerRepo pipeAnswerRepo,
+                                   VesselRepo vesselRepo,
+                                   CorrectVesselAnswerRepo correctVesselAnswerRepo) {
         return args -> {
             Examiner2Application obj = new Examiner2Application();
             //-----------------------------------------------------------
@@ -129,6 +135,18 @@ public class LoadDatabase {
                     .getClassLoader()
                     .getResourceAsStream( "static/B_8_2_ANSWER.txt" );
 
+            //----------------Vessel---------------------------------------
+            InputStream inputVesselQuestions = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_3_ALL.txt" );
+
+
+            InputStream inputVesselAnswers = obj
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream( "static/B_8_3_ANSWERS.txt" );
+
             preloadDatabaseForAllTests(gazRepo,
                     gazNewRepo,
                     corectGazAnswerRepo,
@@ -142,6 +160,8 @@ public class LoadDatabase {
                     correctAnswerBoilerRepo,
                     pipeRepo,
                     pipeAnswerRepo,
+                    vesselRepo,
+                    correctVesselAnswerRepo,
                     inputStreamGazQuestion,
                     inputStreamGazAnswer,
                     inputStreamHeatQuestion,
@@ -154,7 +174,9 @@ public class LoadDatabase {
                     inputBoilerQuestions,
                     inputBoilerAnswers,
                     inputPipeQuestions,
-                    inputPipeAnswers);
+                    inputPipeAnswers,
+                    inputVesselQuestions,
+                    inputVesselAnswers);
 
         };
     }
@@ -172,6 +194,8 @@ public class LoadDatabase {
                                             CorrectAnswerBoilerRepo correctAnswerBoilerRepo,
                                             PipeRepo pipeRepo,
                                             CorrectPipeAnswerRepo pipeAnswerRepo,
+                                            VesselRepo vesselRepo,
+                                            CorrectVesselAnswerRepo correctVesselAnswerRepo,
                                             InputStream inputStreamGazQuestion,
                                             InputStream inputStreamGazAnswer,
                                             InputStream inputStreamHeatQuestion,
@@ -184,7 +208,9 @@ public class LoadDatabase {
                                             InputStream inputBoilerQuestions,
                                             InputStream inputBoilerAnswers,
                                             InputStream inputPipeQuestions,
-                                            InputStream inputPipeAnswers) throws IOException {
+                                            InputStream inputPipeAnswers,
+                                            InputStream inputVesselQuestions,
+                                            InputStream inputVesselAnswers) throws IOException {
         //Preload new questions for gaz and test options
         String[] tempNew = getArray(inputStreamGazQuestionNew);
         String[] arrayQuestionNew = Arrays.copyOfRange(tempNew, 1, tempNew.length);
@@ -316,6 +342,26 @@ public class LoadDatabase {
             String[] split = s.split( "\\n" );
             log.info( "Preload answer for pipe" + pipeAnswerRepo
                     .save( new CorrectPipeAnswer( split[1] ) ) );
+        }
+
+        //-----------------------------------------------------------------------------------
+        //Preload vessel
+        temp = getArray( inputVesselQuestions );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            int length = split.length;
+            log.info( "Preload vessel question database " + vesselRepo
+                    .save( new VesselQuestions( split[0],
+                            Arrays.asList( Arrays.copyOfRange( split, 1, length ) ) ) ) );
+        }
+
+        temp = getArray( inputVesselAnswers );
+        arrayQuestion = Arrays.copyOfRange( temp, 1, temp.length );
+        for (String s : arrayQuestion) {
+            String[] split = s.split( "\\n" );
+            log.info( "Preload answer for vessel" + correctVesselAnswerRepo
+                    .save( new CorrectVesselAnswer( split[1] ) ) );
         }
     }
 
