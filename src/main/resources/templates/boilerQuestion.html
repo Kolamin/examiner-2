@@ -9,6 +9,13 @@
 <body>
 <div class="container">
     <header>
+        <div>
+            <span>Б.8.1. Эксплуатация опасных производственных объектов, на которых используются котлы (паровые, водогрейные, электрические, а также
+с органическими и неорганическими теплоносителями)
+</span>
+        </div>
+        <br/>
+        <br/>
         <h3 th:text="'Вопрос ' + ${question.getId()}"></h3>
     </header>
     <form th:method="post" th:action="@{/boiler/answer/{id}(id=${question.getId()})}" th:object="${question}">

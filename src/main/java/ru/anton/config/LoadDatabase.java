@@ -133,7 +133,7 @@ public class LoadDatabase {
             InputStream inputPipeAnswers = obj
                     .getClass()
                     .getClassLoader()
-                    .getResourceAsStream( "static/B_8_2_ANSWER.txt" );
+                    .getResourceAsStream( "static/B_8_2_ANSWERS.txt" );
 
             //----------------Vessel---------------------------------------
             InputStream inputVesselQuestions = obj
@@ -384,6 +384,6 @@ public class LoadDatabase {
             }
         }
         return content.toString()
-                .split("(\\d+\\.\\s)|(Вопрос \\d+)");
+                .split("(\\d+\\.\\s+?)|(Вопрос \\d+)");
     }
 }
